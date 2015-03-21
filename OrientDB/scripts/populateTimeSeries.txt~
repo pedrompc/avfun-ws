@@ -1,0 +1,59 @@
+var graph = orient.getGraph();
+
+deleteTimeSeries();
+
+var dbYear = createYear(year);
+return fillYear(dbYear);
+
+function createYear(year){
+  var res = graph.command("sql", 'insert into Year (year) values (?)', [year]);
+  //println("inserted year" + res.id)
+  return res;
+}
+
+// populates the months and days for a given year
+function fillYear(dbYear){
+  if(!dbYear.id){
+    return;
+  }
+  
+  var yearString = dbYear.getProperty("year");
+  var currYearDate = new Date(yearString, 0, 1)
+  var nextYearDate = new Date(yearString, 0, 1)
+  nextYearDate.setFullYear(currYearDate.getFullYear() + 1)
+
+  for(; currYearDate < nextYearDate; currYearDate.setMonth(currYearDate.getMonth() + 1)){
+    createMonth(dbYear, currYearDate.getMonth());
+  }
+  
+}
+
+function createMonth(dbYear, jsMonth){
+  var month = jsMonth + 1; //js months start at 0 but we want ours to start at 1
+  var dbMonth = graph.command("sql", 'insert into Month (month, year) values (?, ?)', [month, dbYear.id]);
+  println("inserted month" + dbMonth.id)
+  graph.command("sql", 'update Year put month = "'+ month +'", '+ dbMonth.id +' where @rid = '+ dbYear.id);
+  println("updated year " + dbYear.id + "with month " + dbMonth.id)
+  
+  var yearString = dbYear.getProperty("year");
+  var currMonthDate = new Date(yearString, jsMonth, 1)
+  var nextMonthDate = new Date(yearString, jsMonth + 1, 1)
+  
+  for(; currMonthDate < nextMonthDate; currMonthDate.setDate(currMonthDate.getDate() + 1)){
+    createDay(dbYear, dbMonth, currMonthDate.getDate());
+  }
+}
+
+function createDay(dbYear, dbMonth, day){
+  var dbDay = graph.command("sql", 'insert into Day (year, month, day) values (?, ?, ?)', [dbYear.id, dbMonth.id, day]);
+  println("inserted day" + dbDay.id)
+  graph.command("sql", 'update Month put day = "'+ day +'", '+ dbDay.id +' where @rid = '+ dbMonth.id);
+  println("updated month " + dbMonth.id + "with day " + dbDay.id)
+}
+
+function deleteTimeSeries(){
+  graph.command("sql", 'delete from Year unsafe');
+  graph.command("sql", 'delete from Month unsafe');
+  graph.command("sql", 'delete from Day unsafe');
+}
+

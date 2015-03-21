@@ -1,0 +1,9 @@
+package com.events.dal.event
+
+import com.events.dal._
+import com.events.domainmodel.event._
+
+class EventRepository extends Repository[Event, Int]{
+  def create(entity: Event) : Unit = {
+  }
+}

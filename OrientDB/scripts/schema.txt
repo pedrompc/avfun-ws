@@ -1,0 +1,36 @@
+create class Event extends V
+
+create property Event.name string
+create property Event.latitude double
+create property Event.longitude double
+
+create class Year extends V
+create class Month extends V
+create class Day extends V
+
+create property Year.year integer
+alter property Year.year mandatory true
+create property Year.month linkmap Month
+
+create property Month.month integer
+alter property Month.month mandatory true
+create property Month.day linkmap Day
+create property Month.yearLink link Year
+alter property Month.yearLink mandatory true
+create property Month.year integer
+alter property Month.year mandatory true
+
+create property Day.day integer
+alter property Day.day mandatory true
+create property Day.monthLink link Month
+alter property Day.monthLink mandatory true
+create property Day.yearLink link Year
+alter property Day.yearLink mandatory true
+create property Day.year integer
+alter property Day.year mandatory true
+
+create class EventDate extends E
+create property EventDate.startDate Datetime
+create property EventDate.endDateDate Datetime
+
+

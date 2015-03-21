@@ -1,0 +1,7 @@
+package com.example
+
+object EventRepository {
+  def create(): int = {
+    0
+  }
+}
