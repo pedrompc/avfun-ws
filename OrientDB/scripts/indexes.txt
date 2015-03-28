@@ -1,0 +1,1 @@
+create index Event.location_idx on Event(latitude, longitude) spatial engine lucene
