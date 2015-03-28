@@ -48,7 +48,7 @@ class EventRepositoryOrientDB (graph: OrientGraph) extends EventRepository {
     }
   }
   
-  override def search(searchTerms: EventSearchTerms) : Future[Traversable[Event]] = {
+  override def search(searchTerms: EventSearch) : Future[Traversable[Event]] = {
     Future {
       //val query = convert st to query
       //new VertexQueryExec(graph, null)

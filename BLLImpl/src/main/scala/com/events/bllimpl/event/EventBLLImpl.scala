@@ -38,7 +38,7 @@ class EventBLLImpl @Inject() (
     }
   }
   
-  override def search(searchTerms: EventSearchTerms) : Future[Traversable[Event]] = {
+  override def search(searchTerms: EventSearch) : Future[Traversable[Event]] = {
     val unitOfWork = unitOfWorkProvider.getUnitOfWork()
     unitOfWork.getEventRepository().search(searchTerms)
   }
