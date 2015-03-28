@@ -15,7 +15,7 @@ class EventController @Inject() (eventBLL: EventBLL) extends Controller {
     val duration2 = new Duration(DateTime.now, DateTime.now.plusDays(2), DateTime.now, DateTime.now)
     val duration3 = new Duration(DateTime.now.minusDays(1), DateTime.now.minusDays(1), DateTime.now, DateTime.now)
     val durations = List(duration1, duration2, duration3)
-    val fut = eventBLL.createEvent(new Event("pedro", null, null, null, null, durations))
+    val fut = eventBLL.createEvent(new Event("pedro", new Location(38.8594712, -9.0626379), null, null, null, durations))
     fut onFailure {
       case t => Ok(views.html.index("fail"))
     }

@@ -25,15 +25,4 @@ object TimeSeriesQueries {
     
     dayQueries
   }
-  /*
-  private def getDurationSubQueries(startDate: DateTime, endDate: DateTime) : Traversable[SelectDayQuery] = {
-    var dayQueries = List[SelectDayQuery]()
-    var dateIter = startDate
-    while (dateIter.compareTo(endDate) <= 0) {
-      val dayQuery = new SelectDayQuery(dayResultAlias, dateIter)
-      dayQueries = dayQuery :: dayQueries
-      dateIter = dateIter.plusDays(1)
-    }
-    dayQueries
-  }*/
 }

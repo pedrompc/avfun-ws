@@ -10,7 +10,10 @@ import com.events.bll.event._
 import javax.inject.{Inject}
 import resource._
 
-class EventBLLImpl @Inject() (unitOfWorkProvider : UnitOfWorkProvider, batchExec: AsyncBatchExec) extends EventBLL {
+class EventBLLImpl @Inject() (
+    unitOfWorkProvider : UnitOfWorkProvider,
+    batchExec: AsyncBatchExec) extends EventBLL 
+{
   override def createEvent(event: Event) : Future[Unit] = {
     batchExec.exec[Unit] { context =>
       val unitOfWork = unitOfWorkProvider.getUnitOfWork()
@@ -33,5 +36,10 @@ class EventBLLImpl @Inject() (unitOfWorkProvider : UnitOfWorkProvider, batchExec
         }
       }
     }
+  }
+  
+  override def search(searchTerms: EventSearchTerms) : Future[Traversable[Event]] = {
+    val unitOfWork = unitOfWorkProvider.getUnitOfWork()
+    unitOfWork.getEventRepository().search(searchTerms)
   }
 }

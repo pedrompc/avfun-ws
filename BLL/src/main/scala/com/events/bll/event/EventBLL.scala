@@ -5,4 +5,5 @@ import com.events.domainmodel.event._
 
 abstract class EventBLL {
   def createEvent(event: Event) : Future[Unit]
+  def search(searchTerms: EventSearchTerms) : Future[Traversable[Event]]
 }

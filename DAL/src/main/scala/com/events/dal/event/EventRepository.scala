@@ -6,4 +6,5 @@ import com.events.domainmodel.event._
 
 abstract class EventRepository{
   def create(entity: Event) : Future[String]
+  def search(searchTerms: EventSearchTerms) : Future[Traversable[Event]]
 }

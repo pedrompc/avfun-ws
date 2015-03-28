@@ -1,5 +1,6 @@
 package com.events.dalorientdb.timeseries
 
+import com.events.dalorientdb.Classes
 import com.github.nscala_time.time.Imports._
 import com.events.dalorientdb.query._
 
@@ -8,11 +9,20 @@ import com.events.dalorientdb.query._
  */
 class SelectDayQuery(
     val resultAlias: String,
-    val datetime: DateTime) extends SelectQuery[DateTime]
+    val datetime: DateTime) extends SelectQuery with WhereClause
 {
-  val selectQueryTemplate : String = "select month[%s].day[%s] as %s from Year where year = %s"
+  val dayTemplate = "month[%s].day[%s] as %s"
+  val clauseTemplate = "year = %s"
   
-  override def getQuery() : String = {
-    selectQueryTemplate.format(datetime.month.get(), datetime.day.get(), resultAlias, datetime.year.get())
+  override def getClauses() : String = {
+    clauseTemplate.format(datetime.getYear)
+  }
+  
+  override def getProjections() : String = {
+    dayTemplate.format(datetime.getMonthOfYear, datetime.getDayOfMonth, resultAlias)
+  }
+  
+  def getFrom() : String = {
+    Classes.year
   }
 }
