@@ -2,6 +2,7 @@ package com.events.dalorientdb.test
 
 import org.scalatest._
 import com.events.dalorientdb.sql._
+import com.events.dalorientdb.sql.dsl._
 
 /**
  * @author pedro
@@ -46,5 +47,30 @@ class SqlTest extends FlatSpec {
     val condition2 = new UnaryConditionStatement(new ValueStatement[String]("p2 = 1"))
     val whereStatement = fromStatement.where(condition1).where(condition2)
     assertResult("select p1,p2 from E where p1 = 1 and p2 = 1") { whereStatement.eval() }
+  }
+  
+  "dsl select with projections" should "return a valid sql statement" in {
+    val q = select("p1", "p2")
+    assertResult("select p1,p2") { q.eval() }
+  }
+  
+  "dsl select with projections and from clause" should "return a valid sql statement" in {  
+    val q = select("p1", "p2").from("E")
+    assertResult("select p1,p2 from E") { q.eval() }
+  }
+  
+  "dsl select with projections, from clause and where clause" should "return a valid sql statement" in {    
+    val q = select("p1", "p2").from("E").where("p1 = 1")
+    assertResult("select p1,p2 from E where p1 = 1") { q.eval() }
+  }
+  
+  "dsl condition composition in where clause" should "return a valid sql statement" in {    
+    val q = select("p1", "p2").from("E").where("p1 = 1", "p2 = 1")
+    assertResult("select p1,p2 from E where p1 = 1 and p2 = 1") { q.eval() }
+  }
+  
+  "dsl where clause composition" should "merge the conditions and return a valid sql statement" in {    
+    val q = select("p1", "p2").from("E").where("p1 = 1").where("p2 = 1")
+    assertResult("select p1,p2 from E where p1 = 1 and p2 = 1") { q.eval() }
   }
 }

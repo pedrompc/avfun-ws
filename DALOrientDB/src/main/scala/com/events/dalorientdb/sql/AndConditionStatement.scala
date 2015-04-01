@@ -7,5 +7,5 @@ class AndConditionStatement(
     override val leftCondition: ConditionStatement,
     override val rightCondition: ConditionStatement) extends BinaryConditionStatement(leftCondition, rightCondition)
 { 
-  def getKeyword() : String = "and"
+  override def getKeyword() : String = "and"
 }
