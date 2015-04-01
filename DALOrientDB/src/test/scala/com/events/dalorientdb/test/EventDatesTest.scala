@@ -1,3 +1,5 @@
+package com.events.dalorientdb.test
+
 import org.scalatest._
 import com.events.dalorientdb.event._
 import org.joda.time._
