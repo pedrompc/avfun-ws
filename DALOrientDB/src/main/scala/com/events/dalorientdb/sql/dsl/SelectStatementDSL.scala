@@ -9,4 +9,7 @@ class SelectStatementDSL(
     override val projections: Traversable[SQLStatement]) extends SelectStatement(projections)
 {  
   def from(fromTarget: String) : FromStatementDSL = new FromStatementDSL(this, new ValueStatement[String](fromTarget))
+
+  override def from(fromTarget: SQLStatement) : FromStatementDSL =
+    new FromStatementDSL(this, new ParenthesisStatement(fromTarget))
 }

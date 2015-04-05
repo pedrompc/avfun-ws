@@ -13,4 +13,8 @@ class FromStatementDSL (
     val conditionStatements = Helper.mkConditions(conditions)
     where(this, conditionStatements)
   }
+
+  def where(conditions: Traversable[ConditionStatement]) : WhereStatementDSL = {
+    where(this, conditions)
+  }
 }

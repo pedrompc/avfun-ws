@@ -15,7 +15,7 @@ class QueryTest extends FlatSpec {
   "getDaysQuery" should "return a valid query for one day" in {
     val date = new DateTime(2015, 3, 21, 0, 0)
     assertResult("select expand(unionall(year[2015].month[3].day[21].@rid)) from TimeSeries") {
-      TimeSeriesQueries.getDaysQuery(List(date))
+      TimeSeriesQueries.getDaysQuery(List(date)).eval()
     }
   }
   
@@ -23,7 +23,7 @@ class QueryTest extends FlatSpec {
     val date1 = new DateTime(2015, 3, 21, 0, 0)
     val date2 = new DateTime(2015, 3, 22, 0, 0)
     assertResult("select expand(unionall(year[2015].month[3].day[21].@rid,year[2015].month[3].day[22].@rid)) from TimeSeries") {
-      TimeSeriesQueries.getDaysQuery(List(date1, date2))
+      TimeSeriesQueries.getDaysQuery(List(date1, date2)).eval()
     }
   }
 }

@@ -37,7 +37,7 @@ class TimeSeriesOperations(graph: OrientGraph) {
   
   def getDayVertexesFromDurations(durations: Traversable[Duration]) : Future[Traversable[EventDayTime]] = {   
     val eventDates = TimeSeriesOperations.getEventDates(durations)
-    val query = TimeSeriesQueries.getDaysQuery(eventDates.getDays())
+    val query = TimeSeriesQueries.getDaysQuery(eventDates.getDays()).eval()
     val queryExec = new VertexQueryExec(graph)
     val dayVertexesFut = queryExec.exec(query)
     dayVertexesFut.map { dayVertices => 

@@ -20,4 +20,8 @@ object select {
   def apply(statement: SQLStatement) : SelectStatementDSL = {
     new SelectStatementDSL(List(statement))
   }
+
+  def apply(statements: Traversable[SQLStatement]) : SelectStatementDSL = {
+    new SelectStatementDSL(statements)
+  }
 }

@@ -13,26 +13,25 @@ object TimeSeriesQueries {
   val dayResultAlias = "dayResult"
   val dayProjectionTemplate = "year[%s].month[%s].day[%s].@rid"
   
-  def getDaysQuery(dates: Traversable[DateTime]): String = {
+  def getDaysQuery(dates: Traversable[DateTime]): SQLStatement = {
     val dayProjections = getDayProjections(dates)
     select(
         function(Functions.expand, 
             function(Functions.unionall, dayProjections))
-    ).from(Classes.timeSeries).eval()
+    ).from(Classes.timeSeries)
   }
   
-  def getDayProjection(dateTime: DateTime) : String = {
-    dayProjectionTemplate.format(dateTime.getYear, dateTime.getMonthOfYear, dateTime.getDayOfMonth) 
+  def getDayProjection(dateTime: DateTime) : SQLStatement = {
+    value(dayProjectionTemplate.format(dateTime.getYear, dateTime.getMonthOfYear, dateTime.getDayOfMonth))
   }
   
-  private def getDayProjections(dates: Traversable[DateTime]) : Traversable[String] = {
-    var dayProjections = List[String]()
+  private def getDayProjections(dates: Traversable[DateTime]) : Traversable[SQLStatement] = {
+    var dayProjections = List[SQLStatement]()
     dates.foreach {
       date =>
       val dayProjection = getDayProjection(date)
       dayProjections = dayProjections :+ dayProjection
     }
-    
     dayProjections
   }
 }

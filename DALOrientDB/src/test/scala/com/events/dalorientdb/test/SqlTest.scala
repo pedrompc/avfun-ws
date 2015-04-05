@@ -1,5 +1,6 @@
 package com.events.dalorientdb.test
 
+import com.events.dalorientdb.Functions
 import org.scalatest._
 import com.events.dalorientdb.sql._
 import com.events.dalorientdb.sql.dsl._
@@ -72,5 +73,21 @@ class SqlTest extends FlatSpec {
   "dsl where clause composition" should "merge the conditions and return a valid sql statement" in {    
     val q = select("p1", "p2").from("E").where("p1 = 1").where("p2 = 1")
     assertResult("select p1,p2 from E where p1 = 1 and p2 = 1") { q.eval() }
+  }
+
+  "dsl function with string param" should "return a valid sql statement" in {
+    assertResult("select expand(in('EventDate')) from Event") {
+      select(
+        function(Functions.expand,
+          function(Functions.in, "EventDate"))
+      ).from("Event").eval()
+    }
+  }
+
+  "dsl query with sub query in from" should "return a valid sql with subquery between parenthesis" in {
+    assertResult("select p1 from (select from Event)") {
+      select("p1")
+      .from(select().from("Event")).eval()
+    }
   }
 }

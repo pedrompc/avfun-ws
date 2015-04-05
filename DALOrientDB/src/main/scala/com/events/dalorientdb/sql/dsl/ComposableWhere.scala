@@ -7,7 +7,7 @@ import com.events.dalorientdb.sql._
  */
 trait ComposableWhere { 
   def where(fromStatement: FromStatement, conditions: Traversable[ConditionStatement]) : WhereStatementDSL = {
-    val statementConditions = conditions.reduceLeft((x, y) => new AndConditionStatement(x, y))
-    new WhereStatementDSL(fromStatement, statementConditions)
+    val composedConditions = Helper.composeConditions(conditions)
+    new WhereStatementDSL(fromStatement, composedConditions)
   }
 }
