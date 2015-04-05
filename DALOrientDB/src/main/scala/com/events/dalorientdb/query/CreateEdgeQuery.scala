@@ -6,11 +6,11 @@ package com.events.dalorientdb.query
 class CreateEdgeQuery(
     val className: String,
     val fromId: String,
-    val toId: String) extends Query
+    val toId: String)
 {
   val createEdgeTemplate = "create edge %s from %s to %s"
   
-  override def getQuery() : String = {
+  def getQuery() : String = {
     return createEdgeTemplate.format(className, fromId, toId)
   }
 }

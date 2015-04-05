@@ -20,15 +20,26 @@ object TimeSeriesOperations{
     val year : Int = dayVtx.getProperty("year")
     new Day(year, month, day)
   }
+  
+  def getEventDates(durations: Traversable[Duration]): EventDates = {
+    val eventDates = new EventDates
+    durations.foreach { duration =>
+      DateHelper.loopDays(duration.startDate, duration.endDate){ 
+        currDay =>
+        eventDates.addDate(currDay, duration.startTime, duration.endTime)
+      }
+    }
+    eventDates
+  }
 }
 
 class TimeSeriesOperations(graph: OrientGraph) {  
   
   def getDayVertexesFromDurations(durations: Traversable[Duration]) : Future[Traversable[EventDayTime]] = {   
-    val eventDates = getEventDates(durations)
+    val eventDates = TimeSeriesOperations.getEventDates(durations)
     val query = TimeSeriesQueries.getDaysQuery(eventDates.getDays())
-    val queryExec = new VertexQueryExec[OrientVertex](graph)
-    val dayVertexesFut = queryExec.exec(query, new VertexConverter(TimeSeriesQueries.dayResultAlias))
+    val queryExec = new VertexQueryExec(graph)
+    val dayVertexesFut = queryExec.exec(query)
     dayVertexesFut.map { dayVertices => 
       getDayVerticesWithTimes(dayVertices, eventDates)
     }
@@ -50,16 +61,5 @@ class TimeSeriesOperations(graph: OrientGraph) {
       }
     }
     .getOrElse(List())
-  }
-  
-  def getEventDates(durations: Traversable[Duration]): EventDates = {
-    val eventDates = new EventDates
-    durations.foreach { duration =>
-      DateHelper.loopDays(duration.startDate, duration.endDate){ 
-        currDay =>
-        eventDates.addDate(currDay, duration.startTime, duration.endTime)
-      }
-    }
-    eventDates
   }
 }

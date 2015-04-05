@@ -7,7 +7,7 @@ import com.github.nscala_time.time.Imports._
  * @author pedro
  */
 class EventSearch(
-    val name: String,
+    val name: Option[String],
     val userLocation: Location, 
     val radius: Radius, 
     val startDate: DateTime,
@@ -16,5 +16,5 @@ class EventSearch(
     val tags: Traversable[Tag])
     (val paging: Option[Paging])
 { 
-  def this(userLocation: Location, radius: Radius) = this("", userLocation, radius, null, null, List(), List())(None)
+  def this(userLocation: Location, radius: Radius) = this(None, userLocation, radius, null, null, List(), List())(None)
 }

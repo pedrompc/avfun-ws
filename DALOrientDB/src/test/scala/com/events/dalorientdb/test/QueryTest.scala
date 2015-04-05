@@ -12,9 +12,18 @@ class QueryTest extends FlatSpec {
     assertResult("create edge TestClass from #1.1 to #1.2") { createEdgeQuery.getQuery }
   }
   
-  "SelectDayQuery" should "return a valid sql query" in {
+  "getDaysQuery" should "return a valid query for one day" in {
     val date = new DateTime(2015, 3, 21, 0, 0)
-    val createEdgeQuery = new SelectDayQuery("Alias", date)
-    assertResult("select month[3].day[21] as Alias from Year where year = 2015") { createEdgeQuery.getQuery }
+    assertResult("select expand(unionall(year[2015].month[3].day[21].@rid)) from TimeSeries") {
+      TimeSeriesQueries.getDaysQuery(List(date))
+    }
+  }
+  
+  "getDaysQuery" should "return a valid query for two days" in {
+    val date1 = new DateTime(2015, 3, 21, 0, 0)
+    val date2 = new DateTime(2015, 3, 22, 0, 0)
+    assertResult("select expand(unionall(year[2015].month[3].day[21].@rid,year[2015].month[3].day[22].@rid)) from TimeSeries") {
+      TimeSeriesQueries.getDaysQuery(List(date1, date2))
+    }
   }
 }
