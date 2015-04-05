@@ -1,3 +1,0 @@
-package com.events.domainmodel
-
-class Event(name: String) {}
